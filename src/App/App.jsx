@@ -20,6 +20,19 @@ export class App extends Component {
     filter: '',
   };
 
+  componentDidMount() {
+    if (load(STORAGE_KEY)) {
+      this.setState({ contacts: load(STORAGE_KEY) });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { contacts } = this.state;
+    if (contacts !== prevState.contacts) {
+      save(STORAGE_KEY, contacts);
+    }
+  }
+
   formSubmitHandler = ({ name, number }) => {
     const contact = {
       id: nanoid(),
@@ -63,19 +76,6 @@ export class App extends Component {
       contacts: prevState.contacts.filter(item => item.id !== itemID),
     }));
   };
-
-  componentDidMount() {
-    if (load(STORAGE_KEY)) {
-      this.setState({ contacts: load(STORAGE_KEY) });
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { contacts } = this.state;
-    if (contacts !== prevState.contacts) {
-      save(STORAGE_KEY, contacts);
-    }
-  }
 
   render() {
     const { filter } = this.state;
